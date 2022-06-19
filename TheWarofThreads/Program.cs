@@ -56,7 +56,7 @@ namespace TheWarofThreads
 
         static bool end = false; //статус конца игры (стоп потоков врагов и пуль)
         static long hit = 0, miss = 0; //попадания\промахи
-        static char[] badchar = {'-', '\\', '|', '/', '_', '}', '{', '"'}; //моделька врага
+        static char[] badchar = {'-', '\\', '|', '/'}; //моделька врага
         static int conMaxHeight = 24, conMaxWidth = Console.BufferWidth; //размер матрицы\консоли
         static char[,] conmass = new char[conMaxHeight + 1, conMaxWidth + 1]; //матрица поля
         static int bx, by; //стартовые координаты пуль
@@ -110,7 +110,7 @@ namespace TheWarofThreads
             while (true)
             {
                 //цикл управление пушкой
-                writeat(x, y, '&'); //отрисовка пушки
+                writeat(x, y, '|'); //отрисовка пушки
                 switch (Console.ReadKey(true).Key)
                 {
                     //считывает нажатые клавиши без записи в консоль

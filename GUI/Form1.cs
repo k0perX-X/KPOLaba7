@@ -16,34 +16,76 @@ namespace GUI
     {
         public Form1()
         {
-            game = new Game(this);
             InitializeComponent();
+            pictureBox.Image = new Bitmap(pictureBox.Width, pictureBox.Height);
+            using (var g = pictureBox.CreateGraphics())
+                g.Clear(Color.Black);
+            game = new Game(this);
         }
 
         private Game game;
 
-        public Bitmap Bitmap
+
+        public void SetImage(Bitmap value)
         {
-            get => _bitmap;
-            set
+            try
             {
-                var bmp2 = new Bitmap(pictureBox.Width, pictureBox.Height);
-                using (var g = Graphics.FromImage(bmp2))
+                //pictureBox.Image = null;
+                // var bmp2 = new Bitmap(pictureBox.Width, pictureBox.Height);
+                using (var g = pictureBox.CreateGraphics())
                 {
                     g.InterpolationMode = InterpolationMode.NearestNeighbor;
-                    g.DrawImage(value, new Rectangle(Point.Empty, bmp2.Size));
-                    pictureBox.Image = bmp2;
+                    g.DrawImage(value, new Rectangle(Point.Empty, pictureBox.Image.Size));
+                    // pictureBox.Image?.Dispose();
+                    // pictureBox.Image = bmp2;
                 }
-
-                _bitmap = value;
+            }
+            catch
+            {
             }
         }
 
-        private Bitmap _bitmap;
-
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            
+            ConsoleKey? key = null;
+            switch (e.KeyCode)
+            {
+                case Keys.Enter:
+                    //key = ConsoleKey.Enter;
+                    break;
+                case Keys.Left:
+                    key = ConsoleKey.LeftArrow;
+                    break;
+                case Keys.Right:
+                    key = ConsoleKey.RightArrow;
+                    break;
+                case Keys.Space:
+                    key = ConsoleKey.Spacebar;
+                    break;
+                default:
+                    break;
+            }
+
+            if (key != null)
+                game.Console.Keys.Enqueue(key.Value);
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            game.mainThread.Abort();
+        }
+
+        private void Form1_SizeChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                pictureBox.Image = new Bitmap(pictureBox.Width, pictureBox.Height);
+                using (var g = pictureBox.CreateGraphics())
+                    g.Clear(Color.Black);
+            }
+            catch
+            {
+            }
         }
     }
 }
